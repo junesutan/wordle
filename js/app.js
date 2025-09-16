@@ -1,113 +1,109 @@
-const wordSolution = "APPLE";
+/*
+TODOS: 
+1. event listener to capture input from user 
+2. save user input as a guess then reset it 
+3. function to check if guess is correct by comparing it with the secret 
+4. function to reveal if guess is correct by changing the colours of the tiles 
+*/
+
+
+// const gridRows = 6;
+// const gridColumns = 5;
+// let currentRow = 0;
+const secretWord = "APPLE";
 
 
 
+//Grab DOM elements 
+const boardEl = document.getElementById("board");
+const userInput = document.getElementById("guess-input");
+const submitButton = document.getElementById("submit-btn");
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("app.js loaded");
+//using event listener to check for DOM elements 
+// submitButton.addEventListener("click", () => {
+//   console.log("submit button was clicked!");
+// });
 
-  const NROWS = 6, NCOLS = 5;
+//make counts an object to store the number of each letter
 
-  const boardEl = document.getElementById("board");
-  const kbEl = document.getElementById("kb");
 
-  const input = document.getElementById("guess-input");
-  const submitBtn = document.getElementById("submit-btn");
 
-  // draw board tiles
-  boardEl.innerHTML = ""; 
-  for (let r = 0; r < NROWS; r++) {
-    for (let c = 0; c < NCOLS; c++) {
-      const d = document.createElement("div");
-      d.className = "tile";
-      d.textContent = ""; // empty tiles
-      boardEl.appendChild(d);
+/*-------------------------------- Functions --------------------------------*/
+ 
+
+//YELLOW: count number of letters to check for duplicates for yellow 
+// function determineYellow() {
+//     const counts = {};
+//     const secretWordArray = secretWord.split("");
+//     for (let i = 0; i<secretWordArray.length; i++) {
+//         const character = secretWordArray[i];
+//         if (counts[character]) {
+//             counts [character] = counts[character] +1;
+//         } else {
+//             counts[character] = 1;
+//         }
+//         }
+// }
+
+//assess user input 
+function storeUserGuess () {
+    // const array = Array(5).fill("absent");
+    const guess = userInput.value 
+    console.log("user guessed: " + guess);
+    return guess;
+}
+
+//present, absent, exact 
+function assessUserGuess (guess) {
+    console.log("assessing user guess");
+    const guess2 = userInput.value 
+
+    const secretWordArray = secretWord.split("");
+    const resultArray = Array(5).fill("absent");
+    const guessArray = guess2.toUpperCase().split("");
+    
+    console.log(resultArray);
+    console.log(guessArray);
+    console.log(secretWordArray);
+
+    // CHECK FOR EXACT (GREEN) //
+    for (let i = 0; i<guessArray.length; i++) {
+        if (guessArray[i] === secretWordArray[i]) {
+            resultArray[i] = "exact";
+        }
     }
-  }
 
-  submitBtn.addEventListener("click", () => {
-  const guess = input.value.toUpperCase();
-  if (guess.length !== 5) {
-    alert("Please enter a 5-letter word");
-    return;
-  }
-  console.log("Your guess:", guess); // replace later with function to update board
-  input.value = ""; // clear input
+    // CHECK FOR PRESENT (YELLOW) //
+    for (let i=0; i<guessArray.length; i++) {
+        const counts = {};
+        if (resultArray[i] === "exact") // IF GREEN, PASS 
+            continue;
+
+        const character = guessArray[i]; // CHECK FOR DUPLICATES 
+
+        if (counts[character] > 0) {
+            resultArray[i].status = "present";
+            counts[character]--; // reduce the number of counts 
+        }
+    
+    // for (let i = 0; i<secretWordArray.length; i++) {
+    //     const character = secretWordArray[i];
+    //     if (counts[character]) {
+    //         counts [character] = counts[character] +1;
+    //     } else {
+    //         counts[character] = 1;
+    //     }
+    //     }
+    // }
+
+
+    console.log(resultArray);
+
+}
+
+submitButton.addEventListener("click", () => {
+  storeUserGuess();
+  assessUserGuess();
 });
-//   keyboard 
-//   "QWERTYUIOPASDFGHJKLZXCVBNM".split("").forEach(ch => {
-//     const b = document.createElement("button");
-//     b.className = "key";
-//     b.textContent = ch;
-//     kbEl.appendChild(b);
-//   });
-});
 
 
-//CONFIG 
-console.log(guess)
-
-
-
-
-
-
-
-
-// // ====== Config ======
-// tile.classList.remove('correct','present','absent');
-// tile.classList.add(res[c]);
-// statuses[r][c] = res[c];
-// colorKeyboard(board[r][c], res[c]);
-
-
-// function colorKeyboard(letter, status){
-// const btn = kbEl.querySelector(`[data-key="${letter}"]`);
-// if (!btn) return;
-// const current = ['absent','present','correct'].find(c => btn.classList.contains(c));
-// if (!current || keyRank[status] > keyRank[current]){
-// btn.classList.remove('absent','present','correct');
-// btn.classList.add(status);
-// }
-// }
-
-
-// function say(msg){
-// toastEl.textContent = msg; toastEl.classList.add('show');
-// setTimeout(()=> toastEl.classList.remove('show'), 1100);
-// }
-
-
-// function shakeRow(r){
-// for (let c=0;c<NCOLS;c++){
-// const t = document.getElementById(`t-${r}-${c}`);
-// t.classList.add('shake'); setTimeout(()=> t.classList.remove('shake'), 320);
-// }
-// }
-
-
-// // ====== Core scoring ======
-// function scoreGuess(guess, solution) {
-// const N = 5;
-// const result = Array(N).fill('absent');
-// const sol = solution.split('');
-// const gss = guess.split('');
-
-
-// const freq = {};
-// for (let i=0; i<N; i++){
-// if (gss[i] === sol[i]){
-// result[i] = 'correct';
-// } else {
-// const c = sol[i];
-// freq[c] = (freq[c] || 0) + 1;
-// }
-// }
-// for (let i=0; i<N; i++){
-// if (result[i] !== 'correct'){
-// const c = gss[i];
-// if (freq[c] > 0){ result[i] = 'present'; freq[c]--; }
-// }
-// }
-// return result;
-// }
