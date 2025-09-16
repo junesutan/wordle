@@ -1,3 +1,8 @@
+const wordSolution = "APPLE";
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js loaded");
 
@@ -5,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const boardEl = document.getElementById("board");
   const kbEl = document.getElementById("kb");
+
+  const input = document.getElementById("guess-input");
+  const submitBtn = document.getElementById("submit-btn");
 
   // draw board tiles
   boardEl.innerHTML = ""; 
@@ -17,15 +25,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // draw a tiny keyboard row just to see something
-  "QWERTYUIOP".split("").forEach(ch => {
-    const b = document.createElement("button");
-    b.className = "key";
-    b.textContent = ch;
-    kbEl.appendChild(b);
-  });
+  submitBtn.addEventListener("click", () => {
+  const guess = input.value.toUpperCase();
+  if (guess.length !== 5) {
+    alert("Please enter a 5-letter word");
+    return;
+  }
+  console.log("Your guess:", guess); // replace later with function to update board
+  input.value = ""; // clear input
+});
+//   keyboard 
+//   "QWERTYUIOPASDFGHJKLZXCVBNM".split("").forEach(ch => {
+//     const b = document.createElement("button");
+//     b.className = "key";
+//     b.textContent = ch;
+//     kbEl.appendChild(b);
+//   });
 });
 
+
+//CONFIG 
+console.log(guess)
 
 
 
