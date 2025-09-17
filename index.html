@@ -4,10 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wordle</title>
-  <!-- point into css/ folder -->
   <link rel="stylesheet" href="css/style.css">
   <script defer src="js/app.js"></script>
-
 </head>
 <body>
   <header>
@@ -15,22 +13,18 @@
   </header>
   <main>
     <div id="board" class="board" aria-label="game board" role="grid" aria-live="polite"></div>
-    <!-- <div id="kb" class="keyboard" aria-label="on-screen keyboard"></div> -->
-     <div id="guess-container">
+    <div id="guess-container">
     <input type="text" id="guess-input" maxlength="5" placeholder="Type your guess">
     <button id="submit-btn">Submit</button>
     </div>
     <div class="bar">
       <button id="newgame" class="btn">New Game</button>
-      <label style="display:flex; align-items:center; gap:6px; font-size:14px; color:#444">
-        <input id="hard" type="checkbox"/> Hard mode
-      </label>
-    </div>
+      <div style="display:flex; align-items:center; gap:16px; font-size:10px; color:#444"></div>
+        <label><input id = "easy" type="checkbox" checked/> Easy mode</label>
+        <label><input id = "hard" type="checkbox" /> Hard mode</label>
+      </div>
   </main>
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
   <footer><em></em></footer>
-
-  <!-- point into js/ folder -->
-  <script src="js/app.js"></script>
 </body>
 </html>
