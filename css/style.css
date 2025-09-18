@@ -50,11 +50,26 @@ main {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(5, var(--tile));
-  grid-template-rows: repeat(6, var(--tile));
   gap: var(--gap);
   margin-bottom: 4px;
 }
+
+/* TODO: trying to implement medium and hard mode*/
+.board.easy-mode {
+  grid-template-columns: repeat(5, var(--tile));
+  grid-template-rows: repeat(6, var(--tile));
+}
+
+.board.medium-mode {
+  grid-template-columns: repeat(5, var(--tile));
+  grid-template-rows: repeat(5, var(--tile));
+}
+
+.board.hard-mode {
+  grid-template-columns: repeat(7, var(--tile));
+  grid-template-rows: repeat(6, var(--tile));
+}
+
 .tile {
   width: var(--tile);
   height: var(--tile);
@@ -172,3 +187,8 @@ footer {
 .tile.reveal {
   transform: scale(1.06);
 } /* tiny pop effect */
+
+.different-modes {
+  display: flex;
+  flex-direction: column;
+}

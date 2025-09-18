@@ -14,7 +14,7 @@
     <main>
       <div
         id="board"
-        class="board"
+        class="board easy-mode"
         aria-label="game board"
         role="grid"
         aria-live="polite"
@@ -30,19 +30,24 @@
         />
         <button id="submit-btn">Submit</button>
       </div>
+
       <div class="bar">
         <button id="newgame" class="btn">New Game</button>
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 10px;
-            color: #444;
-          "
-        ></div>
-        <label><input id="easy" type="checkbox" checked /> Easy mode</label>
-        <label><input id="hard" type="checkbox" /> Hard mode</label>
+      </div>
+
+      <div class="different-modes">
+        <label
+          ><input id="easy" type="radio" name="mode" value="easy" checked />
+          Easy mode (5 letters, 6 tries)
+        </label>
+        <label
+          ><input id="medium" type="radio" name="mode" value="medium" /> Medium
+          mode (5 letters, 5 tries)
+        </label>
+        <label
+          ><input id="hard" type="radio" name="mode" value="hard" /> Hard mode
+          (7 letters, 6 tries)
+        </label>
       </div>
     </main>
     <div id="toast" class="toast" role="status" aria-live="assertive"></div>

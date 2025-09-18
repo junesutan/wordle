@@ -13,24 +13,125 @@
 //if number of tries > 0, show the number of tries
 //if number of tries > 0 and they're all green = you win
 
-const secretWord = "APPLE";
+const gameConfig = {
+  easy: {
+    wordLength: 5,
+    maxTries: 6,
+    word: [
+      "GRAPE",
+      "MANGO",
+      "LEMON",
+      "BERRY",
+      "MELON",
+      "STONE",
+      "BLAST",
+      "FLAME",
+      "BRUSH",
+      "CHARM",
+      "GLASS",
+      "SPARK",
+      "CLOUD",
+      "DREAM",
+      "FLASH",
+    ], //so that the answer always changes when user plays a new game
+  },
+  medium: {
+    wordLength: 5,
+    maxTries: 5,
+    word: [
+      "GRAPE",
+      "MANGO",
+      "LEMON",
+      "BERRY",
+      "MELON",
+      "STONE",
+      "BLAST",
+      "FLAME",
+      "BRUSH",
+      "CHARM",
+      "GLASS",
+      "SPARK",
+      "CLOUD",
+      "DREAM",
+      "FLASH",
+    ],
+  },
+  hard: {
+    wordLength: 7,
+    maxTries: 6,
+    word: [
+      "ORCHARD",
+      "CHERRYL",
+      "BANANAS",
+      "PUMPKIN",
+      "ORANGES",
+      "VIOLETS",
+      "GARDENS",
+      "MARKERS",
+      "FANTASY",
+      "SUNRISE",
+      "CANDLES",
+      "FIREWORK",
+      "BALLOON",
+      "CRYSTAL",
+    ],
+  },
+};
 
-const rows = 6;
-const columns = 5;
+//game state
+let secretWord = "APPLE";
+let currentMode = "easy";
+let rows = 6;
+let columns = 5;
 let currentRow = 0;
-
-const winArray = Array(columns).fill("exact");
+let winArray = [];
 
 /*-------------------------------- using the DOM to retrieve elements --------------------------------*/
 const boardEl = document.getElementById("board");
+const expertBoardEl = document.getElementById("expertboard");
 const userInput = document.getElementById("guess-input");
 const submitButton = document.getElementById("submit-btn");
 const newGame = document.getElementById("newgame");
 const message = document.getElementById("message");
 
-// const hardMode = document.getElementById("hardmode");
+const easyMode = document.getElementById("easy");
+const mediumMode = document.getElementById("medium");
+const hardMode = document.getElementById("hard");
 
 /*-------------------------------- Functions --------------------------------*/
+
+function initializeGame() {
+  //using a constant at the top so easier to switch between game modes
+  const config = gameConfig[currentMode];
+  //console.log("config: ", config);
+  //redefining the state of variables that change according to game modes
+  secretWord = config.word[Math.floor(Math.random() * config.word.length)];
+  rows = config.maxTries;
+  columns = config.wordLength;
+  currentRow = 0;
+  winArray = Array(columns).fill("exact");
+  userInput.disabled = false;
+  submitButton.disabled = false;
+  //   console.log(winArray);
+  //   console.log(config);
+  //   console.log(secretWord);
+  //   console.log(config.word.length);
+  //   console.log("rows: ", rows);
+  //   console.log("columns: ", columns); //returns number
+  //   console.log(currentMode);
+
+  boardEl.className = `board ${currentMode}-mode`; //html
+  boardEl.innerHTML = "";
+
+  userInput.maxLength = columns;
+  console.log("helo: ", userInput.maxLength);
+
+  drawBoard();
+  //   console.log(boardEl.className);
+  // let currentRow =
+  userInput.value = "";
+  message.textContent = `Enter a ${columns}-letter word!`;
+}
 
 function changeMessage(res) {
   let numTries = rows - currentRow;
@@ -73,10 +174,20 @@ function drawBoard() {
   }
 }
 
+function drawExpertBoard() {
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < columns; c++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      expertBoardEl.appendChild(tile);
+    }
+  }
+}
+
 function resetGame() {
   //new game
   currentRow = 0;
-  message.textContent = "Enter a " + columns + "-letter word!";
+  message.textContent = `Enter a ${columns}-letter word!`;
   const tiles = document.querySelectorAll(".tile");
   console.log("tiles: ", tiles);
   console.log("tiltes.length : ", tiles.length);
@@ -101,8 +212,9 @@ function fillTiles(guess, result) {
 }
 
 function colourTile(results) {
+  console.log("r,c:", row, columns);
   const tiles = document.querySelectorAll(".tile"); //retrieve tiles
-  const rowStart = currentRow * columns;
+  const rowStart = currentRow * columns; //gives the first tile number of that row
 
   for (let i = 0; i < results.length; i++) {
     const t = tiles[rowStart + i];
@@ -135,11 +247,11 @@ function countSecretWordLetters(word) {
   return counts;
 }
 
-function checkGuess(userGu) {
+function checkGuess() {
   const guess = getGuess();
   const guessArray = guess.split("");
   const secretWordArray = secretWord.split("");
-  const resultArray = Array(5).fill("absent");
+  const resultArray = Array(columns).fill("absent");
   // console.log(guessArray)
   // console.log(secretWordArray)
   // console.log(resultArray)
@@ -171,15 +283,15 @@ function checkGuess(userGu) {
   //   console.log("resultArray: ", resultArray);
   return resultArray;
 }
+initializeGame();
+console.log("columns:", columns);
 
-drawBoard();
-message.textContent = "Enter a " + columns + "-letter word!";
 // console.log(checkGuess());
 
 /*-------------------------------- event listener --------------------------------*/
 submitButton.addEventListener("click", (event) => {
-  if (userInput.value.length < 5) {
-    alert("Type in a 5 letter word");
+  if (userInput.value.length < columns) {
+    alert("Type in a " + columns + "-letter word");
     return;
   }
   const userGuess = getGuess();
@@ -199,7 +311,7 @@ submitButton.addEventListener("click", (event) => {
 
 userInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    if (userInput.value.length < 5) {
+    if (userInput.value.length < columns) {
       alert("Type in a 5 letter word");
       return;
     }
@@ -221,6 +333,32 @@ userInput.addEventListener("keydown", (event) => {
 newGame.addEventListener("click", (event) => {
   resetGame();
 });
+
+easyMode.addEventListener("change", (e) => {
+  // set rows/columns for your draw function
+  if (e.target.checked) {
+    currentMode = "easy"; //after checking box, want to reset game from beginning
+    initializeGame();
+  }
+});
+
+mediumMode.addEventListener("change", (e) => {
+  // set rows/columns for your draw function
+  if (e.target.checked) {
+    currentMode = "medium";
+    initializeGame();
+  }
+});
+hardMode.addEventListener("change", (e) => {
+  // set rows/columns for your draw function
+  if (e.target.checked) {
+    currentMode = "hard";
+    initializeGame();
+    // console.log("hard mode columns:", columns);
+  }
+});
+
+//const expertboardEl = document.getElementById("expertboard");
 
 // hardMode.addEventListener("click", (event) => {
 //   //   boardEl.id = "board2";
