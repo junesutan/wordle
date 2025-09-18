@@ -35,14 +35,25 @@ header h1 {
 main {
   display: grid;
   place-items: center;
-  padding: 12px 16px 24px;
+  padding: 12px 16px;
 }
+
+.message {
+  font-size: 15px;
+  background-color: rgb(227, 223, 223);
+  border-radius: 20px;
+  display: flex;
+  padding: 12px 35px;
+  border: 5px solid white;
+  margin: 2px 0;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(5, var(--tile));
   grid-template-rows: repeat(6, var(--tile));
   gap: var(--gap);
-  margin: 16px 0 24px;
+  margin-bottom: 4px;
 }
 .tile {
   width: var(--tile);
@@ -59,6 +70,11 @@ main {
 .tile.filled {
   border-color: #aaa;
 }
+
+.tile.greyedout {
+  background: #bdbdbd;
+}
+
 .tile.exact {
   background: #6aaa64;
   border-color: #6aaa64;
@@ -78,7 +94,7 @@ main {
 #guess-container {
   /*textbox*/
   height: 40px;
-  margin-top: 0px;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
   gap: 8px;
@@ -89,13 +105,13 @@ main {
   padding: 6px 6px;
   width: 200px; /* adjust size */
   text-transform: uppercase; /* auto-capitalize */
-  margin-right: 30px;
+  margin-right: 20px;
 }
 
 #submit-btn {
   height: 40px;
   font-size: 15px;
-  padding: 6px 10px;
+  padding: 0px 10px;
   cursor: pointer;
 }
 

@@ -7,20 +7,62 @@
 // put all the alphabets and how many there are into an object
 // if it's there, show -- TURN TILE YELLOW
 
+//MESSAGE
+//number of tries left
+//if number of tries = 0, and theyre not all green = you lose
+//if number of tries > 0, show the number of tries
+//if number of tries > 0 and they're all green = you win
+
 const secretWord = "APPLE";
 
 const rows = 6;
 const columns = 5;
 let currentRow = 0;
 
+const winArray = Array(columns).fill("exact");
+
 /*-------------------------------- using the DOM to retrieve elements --------------------------------*/
 const boardEl = document.getElementById("board");
 const userInput = document.getElementById("guess-input");
 const submitButton = document.getElementById("submit-btn");
 const newGame = document.getElementById("newgame");
+const message = document.getElementById("message");
+
 // const hardMode = document.getElementById("hardmode");
 
 /*-------------------------------- Functions --------------------------------*/
+
+function changeMessage(res) {
+  let numTries = rows - currentRow;
+  let resultArray = res; //returns the result array
+
+  console.log("result array: ", resultArray);
+  console.log("win array: ", winArray);
+
+  if (numTries > 0) {
+    message.textContent = "number of tries left:  " + numTries;
+  }
+
+  // two separate arrays are not recognised to be the same with ===, so join first
+  if (numTries >= 0 && resultArray.join("") === winArray.join("")) {
+    message.textContent = "your word is correct, you win!";
+    userInput.disabled = true;
+    userInput.placeholder = "play again!";
+    submitButton.disabled = true;
+    console.log(currentRow);
+    console.log("tile number: " + currentRow * columns);
+    const tiles = document.querySelectorAll(".tile"); //returns node list
+    for (i = currentRow * columns; i < tiles.length; i++) {
+      const tile = tiles[i];
+      tile.classList.add("greyedout");
+    }
+  }
+
+  if (numTries === 0 && resultArray.join("") != winArray.join("")) {
+    message.textContent = "no more tries ):  you lose!";
+  }
+}
+
 function drawBoard() {
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < columns; c++) {
@@ -31,17 +73,20 @@ function drawBoard() {
   }
 }
 
-function clearTiles() {
+function resetGame() {
+  //new game
+  currentRow = 0;
+  message.textContent = "Enter a " + columns + "-letter word!";
   const tiles = document.querySelectorAll(".tile");
   console.log("tiles: ", tiles);
-  console.log("tiltes.lengjt: ", tiles.length);
+  console.log("tiltes.length : ", tiles.length);
   for (let i = 0; i < tiles.length; i++) {
     const tile = tiles[i];
-
     tile.textContent = "";
-    tile.classList.remove("exact", "present", "absent");
-    currentRow = 0;
+    tile.className = "tile";
   }
+  userInput.disabled = false;
+  submitButton.disabled = false;
 }
 
 function fillTiles(guess, result) {
@@ -123,12 +168,13 @@ function checkGuess(userGu) {
     }
   }
 
-  console.log("resultArray: ", resultArray);
+  //   console.log("resultArray: ", resultArray);
   return resultArray;
 }
 
-drawBoard(); // call once, make it at the top
-console.log(checkGuess());
+drawBoard();
+message.textContent = "Enter a " + columns + "-letter word!";
+// console.log(checkGuess());
 
 /*-------------------------------- event listener --------------------------------*/
 submitButton.addEventListener("click", (event) => {
@@ -137,10 +183,10 @@ submitButton.addEventListener("click", (event) => {
     return;
   }
   const userGuess = getGuess();
-  console.log("userGuess: ", userGuess);
+  //   console.log("userGuess: ", userGuess);
   //check if correct, returns an array of "exact", "present", "absent"
   const res = checkGuess(userGuess);
-  console.log("res: ", res);
+  //   console.log("res: ", res);
   //color tiles
   fillTiles(userGuess, res);
 
@@ -148,6 +194,7 @@ submitButton.addEventListener("click", (event) => {
   userInput.value = "";
 
   currentRow++;
+  changeMessage(res);
 });
 
 userInput.addEventListener("keydown", (event) => {
@@ -160,7 +207,7 @@ userInput.addEventListener("keydown", (event) => {
     console.log("userGuess: ", userGuess);
     //check if correct, returns an array of "exact", "present", "absent"
     const res = checkGuess(userGuess);
-    console.log("res: ", res);
+    // console.log("res: ", res);
     //color tiles
     fillTiles(userGuess, res);
 
@@ -168,11 +215,11 @@ userInput.addEventListener("keydown", (event) => {
     userInput.value = "";
 
     currentRow++;
+    changeMessage(res);
   }
 });
-
 newGame.addEventListener("click", (event) => {
-  clearTiles();
+  resetGame();
 });
 
 // hardMode.addEventListener("click", (event) => {
